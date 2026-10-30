@@ -1,0 +1,1 @@
+{"name":"ai-art-video-studio-web","private":true,"version":"0.2.0","scripts":{"dev":"vercel dev"},"engines":{"node":">=20"}}
