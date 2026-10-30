@@ -1,0 +1,24 @@
+name: Validate Studio JavaScript
+on:
+  push:
+    paths:
+      - 'web/**/*.js'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - 'web/**/*.js'
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check frontend JavaScript syntax
+        run: node --check web/app.js
+      - name: Check Vercel API syntax
+        run: |
+          for file in web/api/*.js; do
+            node --check "$file"
+          done
