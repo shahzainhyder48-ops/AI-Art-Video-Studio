@@ -1,0 +1,1 @@
+export default function handler(req,res){res.status(200).json({ok:true,name:"AI Art Video Studio",runtime:"vercel",mode:process.env.RENDER_API_URL?"remote-renderer":"planner",rendererConfigured:Boolean(process.env.RENDER_API_URL)})}
