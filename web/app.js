@@ -2,3 +2,31 @@ const form=document.querySelector('#studioForm');let plan=null;form.addEventList
 // Optional Vercel backend helpers: no false success when rendering is unavailable.
 async function checkBackend(){try{const r=await fetch('/api/health');if(!r.ok)return;const data=await r.json();const status=document.querySelector('.studio .status');if(status)status.textContent=data.rendererConfigured?'● Renderer configured':'● Planner ready · renderer not connected';}catch{}}
 checkBackend();
+
+
+// Free browser-based voice preview (uses installed system voices; no API key).
+// This is speech playback, not a downloadable audio track or an MP4 renderer.
+if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
+  const result = document.querySelector('#result');
+  const preview = document.createElement('button');
+  preview.type = 'button';
+  preview.className = 'btn secondary';
+  preview.textContent = '▶ Preview Voice';
+  preview.style.marginLeft = '0.75rem';
+  document.querySelector('#download').insertAdjacentElement('afterend', preview);
+  preview.addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    if (!plan || !plan.scenes?.length) return;
+    if (plan.voice === 'no') return alert('Set Voiceover to On to preview narration.');
+    const utterance = new SpeechSynthesisUtterance(plan.scenes.map(s => s.text).join(' '));
+    utterance.rate = 0.92;
+    utterance.onend = () => { preview.textContent = '▶ Preview Voice'; };
+    utterance.onerror = () => { preview.textContent = '▶ Preview Voice'; };
+    preview.textContent = '■ Stop Voice';
+    window.speechSynthesis.speak(utterance);
+  });
+  preview.addEventListener('dblclick', () => {
+    window.speechSynthesis.cancel();
+    preview.textContent = '▶ Preview Voice';
+  });
+}
